@@ -1,0 +1,99 @@
+options:
+   p: &8&l[&a&lM&cilli&a&lP&ciyango&8&l]
+   noperm: &4&lYou Dont Have The Permission
+   perm: milli.piyango
+   menu: &8&l&m----[&c&lMilli Piyango&8&l&m]----
+   
+   
+variables:
+   {Para.%player%} = 0
+   
+   
+command /millipiyango [<text>] [<number>] [<player>]:
+   trigger:
+       if arg 1 is not set:
+           if arg 2 is not set:
+               if number-arg is not set:
+                   send "{@menu}"
+                   send "{@p} &c/millipiyango bilet &aSize Bilet Verir."
+                   send "{@p} &c/millipiyango param &aParanizi Gosterir."
+                   send "{@p} &c/millipiyango kalem &aBileti Kazimak icin Kalem Verir."
+                   send "{@p} &c/millipiyango gonder <miktar> <oyuncu> &aile istediginiz Oyuncuya Para Gonderirsiniz."
+       if arg 1 is set:
+           if arg 2 is not set:
+               if number-arg is not set:
+                   if arg 1 is "bilet":
+                       if {Para.%player%} greater than 5000:
+                           add -5000 to {Para.%player%}
+                           give paper named "&c&lBilet" to player
+                           send "{@p} &cBilet Verildi. &a5000 Para Karsiligi!"
+                       else:                                                     
+                           send "{@p} &aYeterince Paran Yok!"
+       if arg 1 is set:
+           if arg 2 is not set:
+               if number-arg is not set:
+                   if arg 1 is "kalem":
+                       give stick named "&a&LKalem" to player
+                       send "{@p} &CKalem Verildi. &aKalem Bedavadir!"
+       if arg 1 is set:
+           if arg 2 is not set:
+               if number-arg is not set:
+                   if arg 1 is "param":
+                       open chest with 1 rows named "{@p} &4&lParasi" to player
+                       format slot 4 of player with wool named "&a&lPara" to close then run [make player execute command "param"]
+       if arg 1 is set:
+           if arg 2 is set:
+               if number-arg is set:
+                   if arg 1 is "gonder":
+                       if {Para.%player%} greater than number-arg:
+                           remove number-arg to {Para.%player%}
+                           add number-arg to {Para.%arg 2%}
+                           send "{@p} &c%arg 2% &aAdlı Oyuncuya &c%number-arg% &aKadar Para Gonderdin!" to player
+                           send "{@p} &c%player% &aAdlı Oyuncu Sana &c%number-arg% &aKadar Para Gonderdi!" to arg-2
+                       
+command /param:
+   trigger:
+       send "{@p} &aParan &c&l%{Para.%player%}%"
+       
+       
+
+on death of player:
+   if attacker is a player:
+       add 100 to {Para.%attacker%}
+       add -100 to {Para.%victim%}
+       send "{@p} &aAdamı Oldurdugun icin 100 Milli Piyango Parasi Kazandin!" to attacker
+       send "{@p} &aAdama Oldugun icin 100 Milli Piyango Parasi Kaybettin!" to victim
+on rightclick with a paper:
+   if display name player's tool contains "&c&lBilet":
+       cancel event
+       remove 1 paper named "&c&LBilet" from player
+       remove 1 stick named "&a&lKalem" from player
+       send "{@p} &cBilet Aciliyorr.....       &7(3 Saniye Bekle.....)"
+       wait 3 seconds
+       chance of 5%:
+            send "{@p} &b10000 tl cikti la? Gulme tuttu simdi beni :D" to player
+            add 10000 to {Para.%player%}
+        else:
+            chance of 15%:
+                send "{@p} &b1000 tl cikti la? Gulme tuttu simdi beni :D" to player
+                add 1000 to {Para.%player%}
+
+            chance of 20%:
+                send "{@p} &bAaaaaaa Boh Cihti" to player
+                give 1 slime ball named "&d&lBOk" to player           
+            chance of 15%:
+                send "{@p} &bHiyar napiim bilediiim boyleg olacagini" to player
+                give 1 diamond sword named "&b&lHiyarliKilic" to player
+            chance of 7%:
+                send "{@p} <gold> 2 Tane &b&lBilet Buldun"
+                give player 2 paper named "&c&lBilet"
+            chance of 4%:
+                send "{@p} <gold>&5 Tane &b&lBilet Buldun Tebrikler"
+                give player 5 paper named "&c&lBilet"
+            chance of 0.1%:
+                send "{@p} &bAaaaaaa GoldDonor oldum"
+                execute console command "manuadd %player% golddonor"
+                broadcast "{@p} &c%player% &aAdli Oyuncuya &e&lGold Donor &aCikti!"
+            chance of 10%:
+                send "{@p} &bAaaaaaa Diamond Gogusluk"
+                give 1 diamond chestplate named "Hiyarli Onluk" to player
